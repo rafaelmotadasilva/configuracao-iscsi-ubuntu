@@ -4,7 +4,7 @@ Este repositório fornece instruções passo a passo sobre como configurar o iSC
 
 ## Visão Geral
 
-O iSCSI (Internet Small Computer System Interface) é uma tecnologia que permite acessar dispositivos de armazenamento remotos através da rede TCP/IP. No Ubuntu Server, configurar o iSCSI pode expandir suas capacidades de armazenamento de forma eficiente e confiável.
+O iSCSI (Internet Small Computer System Interface) é uma tecnologia que permite acessar dispositivos de armazenamento remotos através da rede TCP/IP.
 
 ## Requisitos
 
@@ -15,9 +15,9 @@ O iSCSI (Internet Small Computer System Interface) é uma tecnologia que permite
 ## Instruções
 
 1. [Instalação do Open-iSCSI](#instalação-do-open-iscsi)
-2. [Atualização do arquivo /etc/iscsi/initiatorname.iscsi](#atualização-do-arquivo-etciscsiinitiatornameiscsi)
-3. [Configurar credenciais](#configurar-credenciais)
-4. [Descobrir o dispositivo de armazenamento e o login](#descobrir-o-dispositivo-de-armazenamento-e-o-login)
+2. [Descobrir o IQN identificador unico do seu disco no storage](#descobrir-o-iqn-identificador-unico-do-seu-disco-no-storage)
+3. [Atualização do arquivo /etc/iscsi/initiatorname.iscsi](#atualização-do-arquivo-etciscsiinitiatornameiscsi)
+4. [Configurar credenciais](#configurar-credenciais)
 5. [Montagem do disco](#montagem-do-disco)
 6. [Automatização da montagem (Opcional)](#automatização-da-montagem-opcional)
 7. [Criação de uma partição e um sistema de arquivos (opcional)](#criação-de-uma-partição-e-um-sistema-de-arquivos-opcional)
@@ -37,12 +37,20 @@ Quando o pacote é instalado, ele cria os dois arquivos a seguir.
 * `/etc/iscsi/iscsid.conf`
 * `/etc/iscsi/initiatorname.iscsi`
 
-## Atualização do arquivo `/etc/iscsi/initiatorname.iscsi`
+## Descobrir o IQN identificador unico do seu disco no storage
 
-Atualize o arquivo `/etc/iscsi/initiatorname.iscsi` com o IQN do storage. Insira o valor como lowercase.
+O utilitário iscsiadm é uma ferramenta usada para a descoberta e o login para destinos iSCSI. Use o comando `iscsiadm` para realizar essa descoberta, inserindo o endereço IP de destino obtido do storage:
 
 ```
-InitiatorName=<value-from-the-Portal>
+sudo iscsiadm -m discovery -t sendtargets -p <IP_DO_STORAGE>
+```
+
+## Atualização do arquivo `/etc/iscsi/initiatorname.iscsi`
+
+Atualize o arquivo `/etc/iscsi/initiatorname.iscsi` com o IQN do storage.
+
+```
+InitiatorName=iqn.2024-02.com.example:storage
 ```
 
 ## Configurar credenciais
@@ -61,14 +69,6 @@ Reinicie o serviço iscsi para que as mudanças entre em vigor.
 
 ```
 systemctl restart iscsid.service
-```
-
-## Descobrir o dispositivo de armazenamento e o login
-
-O utilitário iscsiadm é uma ferramenta usada para a descoberta e o login para destinos iSCSI. Use o comando `iscsiadm` para realizar essa descoberta, inserindo o endereço IP de destino obtido do storage:
-
-```
-sudo iscsiadm -m discovery -t sendtargets -p <ip-value-from-storage>
 ```
 
 Configure o login automático.
