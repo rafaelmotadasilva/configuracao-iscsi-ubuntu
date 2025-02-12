@@ -42,7 +42,7 @@ Quando o pacote é instalado, ele cria os dois arquivos a seguir.
 O utilitário iscsiadm é uma ferramenta usada para a descoberta e o login para destinos iSCSI. Use o comando `iscsiadm` para realizar essa descoberta, inserindo o endereço IP de destino obtido do storage:
 
 ```
-sudo iscsiadm -m discovery -t sendtargets -p <IP_DO_STORAGE>
+sudo iscsiadm -m discovery -t sendtargets -p <IP-do-Storage>
 ```
 
 ## Atualização do arquivo `/etc/iscsi/initiatorname.iscsi`
@@ -59,11 +59,11 @@ Edite as configurações a seguir no `/etc/iscsi/iscsid.conf` usando o nome do u
 
 ```
 node.session.auth.authmethod = CHAP
-node.session.auth.username = <Username-value-from-Portal>
-node.session.auth.password = <Password-value-from-Portal>
+node.session.auth.username = username
+node.session.auth.password = password
 discovery.sendtargets.auth.authmethod = CHAP
-discovery.sendtargets.auth.username = <Username-value-from-Portal>
-discovery.sendtargets.auth.password = <Password-value-from-Portal>
+discovery.sendtargets.auth.username = username
+discovery.sendtargets.auth.password = password
 ```
 Reinicie o serviço iscsi para que as mudanças entre em vigor.
 
